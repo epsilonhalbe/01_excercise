@@ -5,7 +5,7 @@ data Color = Black | Red     | Green | Yellow
            deriving (Enum, Show)
 
 data Dimension = D {_x :: Int, _y :: Int} deriving (Show)
-data Lego = Lego {dim :: Dimension, _color :: Color}
+data Lego = Lego {dim :: Dimension, _color :: Color} deriving (Show)
 
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
