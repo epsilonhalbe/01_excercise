@@ -4,8 +4,14 @@ data Color = Black | Red     | Green | Yellow
            | Blue  | Magenta | Cyan  | White
            deriving (Enum, Show)
 
-data Dimension = D {_x :: Int, _y :: Int} deriving (Show)
-data Lego = Lego {dim :: Dimension, _color :: Color} deriving (Show)
+data Dimension = D {_x :: Int, _y :: Int}
+data Lego = Lego {dim :: Dimension, _color :: Color}
+
+instance Show Dimension where
+  show (D x y) = show x ++" x "++show y
+
+instance Show Lego where
+  show (Lego d c) = "["++show d++" | "++show c++"]"
 
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
