@@ -16,11 +16,12 @@ instance Show Lego where
   show (Lego d c) = "["++show d++" | "++show c++"]"
 
 pprint :: Lego -> IO ()
-pprint (Lego (D x y) col) = putStr $ unlines ([""]++[t]++replicate y m)
+pprint (Lego (D x y) col) = putStr $ unlines ([""]++[t]++replicate y m++[b])
     where t = " " ++ replicate (2*x-1) '_' ++" "
           m = "│" ++
               intersperse ' ' (replicate x (char col))++
               "│"
+          b = " " ++ replicate (2*x-1) '‾' ++" "
 
 char :: Color -> Char
 char Black = '0'
