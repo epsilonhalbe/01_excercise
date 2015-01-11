@@ -1,4 +1,6 @@
-module Lego (Lego(..), Color(..), Dimension(..), (><), turn, setX, setY, setColor) where
+module Lego (Lego(..), Color(..), Dimension(..), (><),pprint, turn, setX, setY, setColor) where
+
+import Data.List (intersperse)
 
 data Color = Black | Red     | Green | Yellow
            | Blue  | Magenta | Cyan  | White
@@ -14,10 +16,15 @@ instance Show Lego where
   show (Lego d c) = "["++show d++" | "++show c++"]"
 
 pprint :: Lego -> IO ()
-pprint = undefined
+pprint (Lego (D x y) col) = putStr $ unlines ([""]++[t]++replicate y m)
+    where t = " " ++ replicate (2*x-1) '_' ++" "
+          m = "│" ++
+              intersperse ' ' (replicate x (char col))++
+              "│"
 
 char :: Color -> Char
-char = undefined
+char Black = '0'
+char c = head (show c)
 
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
