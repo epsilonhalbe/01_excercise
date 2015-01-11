@@ -1,6 +1,6 @@
-module Lego (Lego(..), Color(..), Dimension(..), (><), brick , pprint, pprint2, turn, setX, setY, setColor) where
+module Lego (Lego(..), Color(..), Dimension(..), (><), pprint, pprint2, turn, setX, setY, setColor) where
 
-import Data.List (intersperse)
+import Data.List (foldl1', intersperse)
 
 data Color = Black | Red     | Green | Yellow
            | Blue  | Magenta | Cyan  | White
@@ -23,21 +23,26 @@ brick :: Int -> Int -> Color -> Lego
 brick a b c = Lego (a >< b) c
 
 strLegos :: [Lego] -> [[String]]
-strLegos [] = undefined -- to catch the maximum [] = error case
-strLegos ls = undefined
+strLegos [] = [] -- to catch the maximum [] = error case
+strLegos ll = let mx = maximum $ map (_y.dim) ll
+              in map (strExt mx) ll
 
 combine :: [[String]] -> [String]
-combine [] = undefined
-combine b = undefined
+combine [] = []
+combine b = foldl1' (<>) b
 
 (<>) :: [String] -> [String] -> [String]
-(<>) = undefined
+(<>) = zipWith (++)
 
 pprint2 :: [Lego] -> IO ()
-pprint2 = undefined
+pprint2 = putStr . unlines . combine . strLegos
 
 strExt :: Int -> Lego -> [String]
-strExt = undefined
+strExt n lego@(Lego (D x y) _)
+    = let STRego t m b = strLego lego
+          line   = replicate (2*x+1) ' '
+      in [t] ++ m ++ [b] ++
+         replicate (n-y) line
 
 pprint :: Lego -> IO ()
 pprint lego = putStr . show $ strLego lego
