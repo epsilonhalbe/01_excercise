@@ -32,13 +32,13 @@ strLego (Lego (D x y) col)= STRego t (replicate y m) b
 
 
 fg :: Color -> String -> String
-fg = undefined
+fg c str = "\x1b["++show (30+fromEnum c) ++";1m"++str++reset
 
 bg :: Color -> String -> String
-bg = undefined
+bg c str = "\x1b["++show (40+fromEnum c) ++";1m"++str++reset
 
 reset :: String
-reset = undefined
+reset = "\x1b[0m"
 
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
