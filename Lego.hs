@@ -1,4 +1,4 @@
-module Lego (Lego(..), Color(..), Dimension(..), (><),pprint, turn, setX, setY, setColor) where
+module Lego (Lego(..), Color(..), Dimension(..), (><), brick , pprint, pprint2, turn, setX, setY, setColor) where
 
 import Data.List (intersperse)
 
@@ -18,6 +18,26 @@ instance Show Lego where
 
 instance Show STRego where
   show (STRego t m b) = unlines ([""]++[t]++m++[b])
+
+brick :: Int -> Int -> Color -> Lego
+brick a b c = Lego (a >< b) c
+
+strLegos :: [Lego] -> [[String]]
+strLegos [] = undefined -- to catch the maximum [] = error case
+strLegos ls = undefined
+
+combine :: [[String]] -> [String]
+combine [] = undefined
+combine b = undefined
+
+(<>) :: [String] -> [String] -> [String]
+(<>) = undefined
+
+pprint2 :: [Lego] -> IO ()
+pprint2 = undefined
+
+strExt :: Int -> Lego -> [String]
+strExt = undefined
 
 pprint :: Lego -> IO ()
 pprint lego = putStr . show $ strLego lego
