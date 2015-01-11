@@ -13,6 +13,12 @@ instance Show Dimension where
 instance Show Lego where
   show (Lego d c) = "["++show d++" | "++show c++"]"
 
+pprint :: Lego -> IO ()
+pprint = undefined
+
+char :: Color -> Char
+char = undefined
+
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
 
