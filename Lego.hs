@@ -1,20 +1,27 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Lego (Lego(..), Color(..), Dimension(..), (><), pprint, pprint2, turn, setX, setY, setColor) where
 
 import Data.List (foldl1', intersperse)
+import Control.Lens
 
 data Color = Black | Red     | Green | Yellow
            | Blue  | Magenta | Cyan  | White
            deriving (Enum, Show)
 
 data Dimension = D {_x :: Int, _y :: Int}
-data Lego = Lego {dim :: Dimension, _color :: Color}
+makeLenses ''Dimension
+
+data Lego = Lego {_dim :: Dimension, _color :: Color}
+makeLenses ''Lego
+
 data STRego = STRego String [String] String
 
 instance Show Dimension where
-  show (D x y) = show x ++" x "++show y
+  show (D x' y') = show x' ++" x "++show y'
 
 instance Show Lego where
-  show (Lego d c) = "["++show d++" | "++show c++"]"
+  show lego = "["++show lego^.dim++" | "++show lego^.color++"]"
 
 instance Show STRego where
   show (STRego t m b) = unlines ([""]++[t]++m++[b])
@@ -24,7 +31,7 @@ brick a b c = Lego (a >< b) c
 
 strLegos :: [Lego] -> [[String]]
 strLegos [] = [] -- to catch the maximum [] = error case
-strLegos ll = let mx = maximum $ map (_y.dim) ll
+strLegos ll = let mx = maximum $ map (_y._dim) ll
               in map (strExt mx) ll
 
 combine :: [[String]] -> [String]
@@ -38,22 +45,22 @@ pprint2 :: [Lego] -> IO ()
 pprint2 = putStr . unlines . combine . strLegos
 
 strExt :: Int -> Lego -> [String]
-strExt n lego@(Lego (D x y) _)
+strExt n lego
     = let STRego t m b = strLego lego
-          line   = replicate (2*x+1) ' '
+          line   = replicate (2*lego^.dim.x+1) ' '
       in [t] ++ m ++ [b] ++
-         replicate (n-y) line
+         replicate (n-lego^.dim.y) line
 
 pprint :: Lego -> IO ()
 pprint lego = putStr . show $ strLego lego
 
 strLego ::  Lego -> STRego
-strLego (Lego (D x y) col)= STRego t (replicate y m) b
-    where t = fg col (" " ++ replicate (2*x-1) '_' ++" ")
+strLego (Lego d col)= STRego t (replicate d^.y m) b
+    where t = fg col (" " ++ replicate (2*d^.x-1) '_' ++" ")
           m = fg col "│" ++
-              bg col (intersperse ' ' (replicate x 'O'))++
+              bg col (intersperse ' ' (replicate d^.x 'O'))++
               fg col "│"
-          b = fg col (" " ++ replicate (2*x-1) '‾' ++" ")
+          b = fg col (" " ++ replicate (2*d^.x-1) '‾' ++" ")
 
 
 fg :: Color -> String -> String
@@ -75,10 +82,10 @@ turn :: Lego -> Lego
 turn (Lego d c) = Lego (_turn d) c
 
 setX ::  Int -> Lego -> Lego
-setX x (Lego (D _ y) c) = Lego (D x y) c
+setX x' lego = lego&dim.x%~x'
 
 setY ::  Int -> Lego -> Lego
-setY y (Lego (D x _) c) = Lego (D x y) c
+setY y' lego = lego&dim.y%~y'
 
 setColor :: Color -> Lego -> Lego
-setColor c (Lego d _) = Lego d c
+setColor c lego = lego&col%~c
