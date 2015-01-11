@@ -1,24 +1,26 @@
 module Lego (Lego(..), Color(..), Dimension(..), (><), turn, setX, setY, setColor) where
 
-data Color = Color
+data Color = Black | Red     | Green | Yellow
+           | Blue  | Magenta | Cyan  | White
+           deriving (Enum, Show)
 
-data Dimension = Dimension
-data Lego = Lego
+data Dimension = D {_x :: Int, _y :: Int} deriving (Show)
+data Lego = Lego {dim :: Dimension, _color :: Color}
 
 (><) :: Int -> Int -> Dimension
-_ >< _ = undefined
+a >< b = D a b
 
 _turn :: Dimension -> Dimension
-_turn = undefined
+_turn (D a b) = b >< a
 
 turn :: Lego -> Lego
-turn = undefined
+turn (Lego d c) = Lego (_turn d) c
 
 setX ::  Int -> Lego -> Lego
-setX = undefined
+setX x (Lego (D _ y) c) = Lego (D x y) c
 
 setY ::  Int -> Lego -> Lego
-setY = undefined
+setY y (Lego (D x _) c) = Lego (D x y) c
 
 setColor :: Color -> Lego -> Lego
-setColor = undefined
+setColor c (Lego d _) = Lego d c
