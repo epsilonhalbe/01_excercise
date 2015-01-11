@@ -24,15 +24,21 @@ pprint lego = putStr . show $ strLego lego
 
 strLego ::  Lego -> STRego
 strLego (Lego (D x y) col)= STRego t (replicate y m) b
-    where t = " " ++ replicate (2*x-1) '_' ++" "
-          m = "│" ++
-              intersperse ' ' (replicate x (char col))++
-              "│"
-          b = " " ++ replicate (2*x-1) '‾' ++" "
+    where t = fg col (" " ++ replicate (2*x-1) '_' ++" ")
+          m = fg col "│" ++
+              bg col (intersperse ' ' (replicate x 'O'))++
+              fg col "│"
+          b = fg col (" " ++ replicate (2*x-1) '‾' ++" ")
 
-char :: Color -> Char
-char Black = '0'
-char c = head (show c)
+
+fg :: Color -> String -> String
+fg = undefined
+
+bg :: Color -> String -> String
+bg = undefined
+
+reset :: String
+reset = undefined
 
 (><) :: Int -> Int -> Dimension
 a >< b = D a b
